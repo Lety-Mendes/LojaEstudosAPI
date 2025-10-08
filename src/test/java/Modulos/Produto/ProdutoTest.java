@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pojo.UsuarioPojo;
+
 import static io.restassured.RestAssured.*;
 import static io.restassured.matcher.RestAssuredMatchers.*;
 import static org.hamcrest.Matchers.*;
@@ -19,13 +21,14 @@ public class ProdutoTest {
         baseURI= "http://165.227.93.41";
         basePath= "/lojinha";
 
+        UsuarioPojo usuario = new UsuarioPojo();
+        usuario.setUsuarioLogin("carlos_43@ymail.com");
+        usuario.setUsuarioSenha("123456");
+
         //Obtenção do token
         this.token = given()
                 .contentType(ContentType.JSON)
-                .body("{\n" +
-                        "  \"usuarioLogin\": \"carlos_43@ymail.com\",\n" +
-                        "  \"usuarioSenha\": \"123456\"\n" +
-                        "}")
+                .body(usuario)
 
                 .when()
                 .post("/v2/login")

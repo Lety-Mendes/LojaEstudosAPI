@@ -1,6 +1,6 @@
-package pojo;
+package model;
 
-public class UsuarioPojo {
+public class Usuario {
     private String usuarioLogin;
     private String usuarioSenha;
 

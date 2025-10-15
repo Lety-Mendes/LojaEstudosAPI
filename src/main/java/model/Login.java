@@ -1,6 +1,6 @@
 package model;
 
-public class Usuario {
+public class Login {
     private String usuarioLogin;
     private String usuarioSenha;
 

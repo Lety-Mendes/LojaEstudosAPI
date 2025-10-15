@@ -1,0 +1,12 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+
+ #Arquivos da IDE (Intellij)
+ .idea/
+ *.iml
+
+ #Compilação e Build
+ /target/
+ *.class
+ *.jar

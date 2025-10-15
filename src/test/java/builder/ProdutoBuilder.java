@@ -1,4 +1,4 @@
-package dataFactory;
+package builder;
 
 import model.Componente;
 import model.Produto;
@@ -6,12 +6,12 @@ import model.Produto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProdutoDataFactory {
+public class ProdutoBuilder {
 
-    public static Produto produtoComumComValorIgualA(double valor){
+    public static Produto produtoComumComValorIgualA(String nomeProduto, double valor){
 
         Produto produto = new Produto();
-        produto.setProdutoNome("play station 5");
+        produto.setProdutoNome(nomeProduto);
         produto.setProdutoValor (valor);
 
         List<String> cores = new ArrayList<>();
@@ -44,4 +44,6 @@ public class ProdutoDataFactory {
 
         return produto;
     }
+
+
 }

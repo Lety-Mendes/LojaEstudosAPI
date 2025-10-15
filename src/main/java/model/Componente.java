@@ -1,6 +1,6 @@
-package pojo;
+package model;
 
-public class ComponentePojo {
+public class Componente {
     private String componenteNome;
     private int componenteQuantidade;
 

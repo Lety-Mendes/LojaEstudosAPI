@@ -1,13 +1,13 @@
-package pojo;
+package model;
 
 import java.util.List;
 
-public class ProdutoPojo {
+public class Produto {
     private String produtoNome;
     private double produtoValor;
     private List<String> produtoCores;
     private String produtoUrlMock;
-    private List<ComponentePojo> componentes;
+    private List<Componente> componentes;
 
     public String getProdutoNome() {
         return produtoNome;
@@ -41,11 +41,11 @@ public class ProdutoPojo {
         this.produtoUrlMock = produtoUrlMock;
     }
 
-    public List<ComponentePojo> getComponentes() {
+    public List<Componente> getComponentes() {
         return componentes;
     }
 
-    public void setComponentes(List<ComponentePojo> componentes) {
+    public void setComponentes(List<Componente> componentes) {
         this.componentes = componentes;
     }
 }

@@ -1,14 +1,30 @@
 package builder;
 
-import model.Usuario;
+import model.Login;
 
-public class UsuarioBuilder {
+public class LoginBuilder {
+    private Login login;
 
-    public static Usuario usuarioComumComLoginESenha(String login, String senha){
-        Usuario usuario = new Usuario();
-        usuario.setUsuarioLogin(login);
-        usuario.setUsuarioSenha(senha);
+    public LoginBuilder(){
+        this.login = new Login();
+        this.login.setUsuarioLogin("carlos_43@ymail.com");
+        this.login.setUsuarioSenha("123456");
 
-        return usuario;
+    }
+
+    public LoginBuilder comUsuario(String email){
+        this.login.setUsuarioLogin(email);
+
+        return this;
+    }
+
+    public LoginBuilder comSenha(String senha){
+        this.login.setUsuarioSenha(senha);
+
+        return this;
+    }
+
+    public Login builder(){
+        return this.login;
     }
 }

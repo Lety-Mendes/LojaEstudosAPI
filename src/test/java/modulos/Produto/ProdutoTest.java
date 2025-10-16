@@ -28,7 +28,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(ProdutoBuilder.produtoComumComValorIgualA("play station 5",0.00))
+                .body(new ProdutoBuilder().comNome("play station 5").comValor (0.00).build())
 
         .when()
                 .post("/v2/produtos")
@@ -47,7 +47,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(ProdutoBuilder.produtoComumComValorIgualA("play station 5",7001))
+                .body(new ProdutoBuilder().comNome("play station 5").comValor (7001))
 
         .when()
                 .post("/v2/produtos")
@@ -66,7 +66,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(ProdutoBuilder.produtoComumComValorIgualA("play station 5",7000))
+                .body(new ProdutoBuilder().comNome("play station 5").comValor (7000).build())
 
         .when()
                 .post("/v2/produtos")
@@ -101,7 +101,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(ProdutoBuilder.produtoComumComValorIgualA("play station 5", 0.01))
+                .body(new ProdutoBuilder().comNome("play station 5").comValor (0.01).build())
 
                 .when()
                 .post("/v2/produtos")
@@ -138,7 +138,7 @@ public class ProdutoTest extends BaseTest {
        primeiroProdutoId=given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(ProdutoBuilder.produtoComumComValorIgualA("Televisão",600))
+                .body(new ProdutoBuilder().comNome("Televisão").comValor(600).build())
 
         .when()
                 .post("/v2/produtos")
@@ -158,7 +158,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(ProdutoBuilder.produtoComumComValorIgualA("Televisão", 600))
+                .body(new ProdutoBuilder().comNome("Televisão").comValor(600).build())
 
         .when()
                 .post("/v2/produtos")
@@ -181,7 +181,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(ProdutoBuilder.produtoComumComValorIgualA(limiteCaracters, 600))
+                .body(new ProdutoBuilder ().comNome(limiteCaracters).comValor(600).build())
 
         .when()
                 .post("/v2/produtos")
@@ -205,7 +205,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(ProdutoBuilder.produtoComumComValorIgualA(acimaDoLimite, 544))
+                .body(new ProdutoBuilder().comNome(acimaDoLimite).comValor(555).build())
 
         .when()
                 .post("/v2/produtos")

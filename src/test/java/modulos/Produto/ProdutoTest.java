@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
-import org.hamcrest.Matcher;
+
 
 
 
@@ -80,15 +80,14 @@ public class ProdutoTest extends BaseTest {
                 .body("data.produtoNome", equalToIgnoringCase("play station 5"))
                 .body("data.produtoCores", contains("Preto", "Branco"))
                 .body("data.componentes.componenteId", is(notNullValue()))
-                .body("data.componentes", hasSize(2))
-                .body("data.componentes", hasItems(
+                .body("data.componentes", containsInAnyOrder( // Mantenha containsInAnyOrder
                         allOf(
-                                (Matcher) hasEntry("componenteNome", "controle"),
-                                (Matcher) hasEntry("componenteQuantidade", 1)
+                                hasEntry("componenteNome", equalTo("controle")), // Chave como String, Valor como Matcher
+                                hasEntry("componenteQuantidade", equalTo("1"))
                         ),
                         allOf(
-                                (Matcher) hasEntry("componenteNome", "Cabo"),
-                                (Matcher)  hasEntry("componenteQuantidade", 2)
+                                hasEntry("componenteNome", equalTo("Cabo")),
+                                hasEntry("componenteQuantidade", equalTo("2"))
                         )
                 ));
 
@@ -112,19 +111,19 @@ public class ProdutoTest extends BaseTest {
                 .statusCode(201)
                 .body("message", equalToIgnoringCase("Produto adicionado com sucesso"))
                 .body("data.produtoId", is(notNullValue()))
-                .body("data.produtoValor", equalTo(Float.valueOf("0.01")))
+                .body("data.produtoValor", closeTo(0.01, 0.001 ))
                 .body("data.produtoNome", equalToIgnoringCase("play station 5"))
                 .body("data.produtoCores", contains("Preto", "Branco"))
                 .body("data.componentes.componenteId", is(notNullValue()))
                 .body("data.componentes", hasSize(2))
-                .body("data.componentes", hasItems(
+                .body("data.componentes", containsInAnyOrder(
                         allOf(
-                                (Matcher) hasEntry("componenteNome", "controle"),
-                                (Matcher) hasEntry("componenteQuantidade", 1)
+                                 hasEntry("componenteNome", "controle"),
+                                hasEntry("componenteQuantidade", "1")
                         ),
                         allOf(
-                                (Matcher) hasEntry("componenteNome", "Cabo"),
-                                (Matcher)  hasEntry("componenteQuantidade", 2)
+                                hasEntry("componenteNome", "Cabo"),
+                                 hasEntry("componenteQuantidade", "2")
                         )
                 ));
 

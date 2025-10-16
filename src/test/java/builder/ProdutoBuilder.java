@@ -7,19 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoBuilder {
+    private static Produto produto;
 
-    public static Produto produtoComumComValorIgualA(String nomeProduto, double valor){
+    public ProdutoBuilder(){
 
         Produto produto = new Produto();
-        produto.setProdutoNome(nomeProduto);
-        produto.setProdutoValor (valor);
+        this.produto.setProdutoNome("nomeProduto");
+        this.produto.setProdutoValor (100.00);
 
         List<String> cores = new ArrayList<>();
         cores.add("Preto");
         cores.add("Branco");
 
-        produto.setProdutoCores(cores);
-        produto.setProdutoUrlMock("");
+        this.produto.setProdutoCores(cores);
+        this.produto.setProdutoUrlMock("");
 
 
 
@@ -37,12 +38,27 @@ public class ProdutoBuilder {
 
         componentes.add(segundoComponente);
 
-        produto.setComponentes(componentes);
+        this.produto.setComponentes(componentes);
 
+    }
 
+    public ProdutoBuilder comNome(String nome){
+        this.produto.setProdutoNome(nome);
+        return this;
+    }
 
+    public ProdutoBuilder comValor(double valor){
+        this.produto.setProdutoValor(valor);
+        return this;
+    }
 
-        return produto;
+    public ProdutoBuilder comComponentes(List<Componente> componentes){
+        this.produto.setComponentes(componentes);
+        return this;
+    }
+
+    public Produto build(){
+        return this.produto;
     }
 
 

@@ -42,9 +42,25 @@ public class ProdutoBuilder {
         return this;
     }
 
-    public ProdutoBuilder comValor(double valor){
+    public ProdutoBuilder comValor(Double valor){
         this.produto.setProdutoValor(valor);
         return this;
+    }
+
+    public ProdutoBuilder semValor(){
+        this.produto.setProdutoValor(null);
+        return this;
+    }
+
+    public ProdutoBuilder comCores( List<String> cores){
+        this.produto.setProdutoCores(cores);
+        return this;
+    }
+
+    public ProdutoBuilder semCores(){
+        this.produto.setProdutoCores(null);
+        return this;
+
     }
 
     public ProdutoBuilder comComponentes(List<Componente> componentes){

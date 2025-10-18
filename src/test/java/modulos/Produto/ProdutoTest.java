@@ -6,6 +6,8 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
@@ -47,7 +49,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(new ProdutoBuilder().comNome("play station 5").comValor (7001))
+                .body(new ProdutoBuilder().comNome("play station 5").comValor (7001d))
 
         .when()
                 .post("/v2/produtos")
@@ -66,7 +68,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(new ProdutoBuilder().comNome("play station 5").comValor (7000).build())
+                .body(new ProdutoBuilder().comNome("play station 5").comValor (7000d).build())
 
         .when()
                 .post("/v2/produtos")
@@ -138,7 +140,7 @@ public class ProdutoTest extends BaseTest {
        primeiroProdutoId=given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(new ProdutoBuilder().comNome("Televisão").comValor(600).build())
+                .body(new ProdutoBuilder().comNome("Televisão").comValor(600d).build())
 
         .when()
                 .post("/v2/produtos")
@@ -158,7 +160,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(new ProdutoBuilder().comNome("Televisão").comValor(600).build())
+                .body(new ProdutoBuilder().comNome("Televisão").comValor(600d).build())
 
         .when()
                 .post("/v2/produtos")
@@ -181,7 +183,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(new ProdutoBuilder ().comNome(limiteCaracters).comValor(600).build())
+                .body(new ProdutoBuilder ().comNome(limiteCaracters).comValor(600d).build())
 
         .when()
                 .post("/v2/produtos")
@@ -205,7 +207,7 @@ public class ProdutoTest extends BaseTest {
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(new ProdutoBuilder().comNome(acimaDoLimite).comValor(555).build())
+                .body(new ProdutoBuilder().comNome(acimaDoLimite).comValor(555d).build())
 
         .when()
                 .post("/v2/produtos")
@@ -221,4 +223,63 @@ public class ProdutoTest extends BaseTest {
 
 
     }
+
+    @Test
+    @DisplayName("BUG REPORTADO: Deve falhar ao cadastrar produto com nome vazio, mas API retorna 201")
+    public void deveFalharComNomeVazioMasRetornaBug(){
+        given()
+                .contentType(ContentType.JSON)
+                .header("token", this.token)
+                .body(new ProdutoBuilder().comNome("").build())
+
+        .when()
+                .post("/v2/produtos")
+
+        .then()
+                .assertThat()
+                // Confirma o BUG: A API retorna 201 (Sucesso)
+                .statusCode(201)
+                // Valida que o nome foi aceito como vazio ("")
+                .body("data.produtoNome", emptyString())
+                .body("message", equalToIgnoringCase("Produto adicionado com sucesso"));
+    }
+
+    @Test
+    @DisplayName("Deve falhar ao cadastrar produto com valor nulo, status code 400")
+    public void deveFalharAoCadastrarProdutoComValorVazio(){
+        given()
+                .contentType(ContentType.JSON)
+                .header("token", this.token)
+                .body(new ProdutoBuilder().semValor().build())
+
+        .when()
+                .post("/v2/produtos")
+
+        .then()
+                .statusCode(400)
+                .body("error", equalToIgnoringCase("produtoNome, produtoValor e produtoCores são campos obrigatórios"))
+                .body("data", is(empty()));
+    }
+
+    @Test
+    @DisplayName("BUG REPORTADO: Deve falhar ao cadastrar produto com produtoCores vazio, mas API retorna 201")
+    public void deveFalharComProdutoCoresVazioMasRetornaBug(){
+        given()
+                .contentType(ContentType.JSON)
+                .header("token", this.token)
+                .body(new ProdutoBuilder().comCores(new ArrayList<>()).build())
+
+                .when()
+                .post("/v2/produtos")
+
+                .then()
+                .log().all()
+                .assertThat()
+                // Confirma o BUG: A API retorna 201 (Sucesso)
+                .statusCode(201)
+                //Confirma o outro BUG: O array de cores contém uma string vazia
+                .body("data.produtoCores", contains(""))// Asserção CORRETA: Espera um array com a string vazia
+                .body("message", equalToIgnoringCase("Produto adicionado com sucesso"));
+    }
+
 }

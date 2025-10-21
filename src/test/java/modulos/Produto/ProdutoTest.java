@@ -7,6 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
@@ -245,6 +247,24 @@ public class ProdutoTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Deve retornar erro 400 ao tentar cadastrar produto com nome nulo/ausente")
+    public void deveRetornarErroAoCadastrarComNomeNulo(){
+        given()
+                .contentType(ContentType.JSON)
+                .header("token", this.token)
+                .body(new ProdutoBuilder().comNome(null).build())
+
+                .when()
+                .post("/v2/produtos")
+
+                .then()
+                .assertThat()
+                .statusCode(400)
+                .body("error", equalToIgnoringCase("produtoNome, produtoValor e produtoCores são campos obrigatórios"))
+                .body("data", is(empty()));
+    }
+
+    @Test
     @DisplayName("Deve falhar ao cadastrar produto com valor nulo, status code 400")
     public void deveFalharAoCadastrarProdutoComValorVazio(){
         given()
@@ -273,13 +293,45 @@ public class ProdutoTest extends BaseTest {
                 .post("/v2/produtos")
 
                 .then()
-                .log().all()
                 .assertThat()
                 // Confirma o BUG: A API retorna 201 (Sucesso)
                 .statusCode(201)
                 //Confirma o outro BUG: O array de cores contém uma string vazia
                 .body("data.produtoCores", contains(""))// Asserção CORRETA: Espera um array com a string vazia
                 .body("message", equalToIgnoringCase("Produto adicionado com sucesso"));
+    }
+
+
+    // Metodo auxiliar para criar um payload inválido
+    private Map<String, Object> criarPayloadComValorInvalido(String valorInvalido) {
+        return Map.of(
+                "produtoNome", "Produto com String no Valor",
+                "produtoValor", valorInvalido,
+                "produtoCores", List.of("Branco", "Preto"),
+                "produtoUrlMock", "",
+                "componentes", List.of(
+                        Map.of("componenteNome", "controle", "componenteQuantidade", 1)
+                )
+        );
+    }
+
+    @Test
+    @DisplayName("Deve falhar ao tentar cadastrar produto com uma string, status code 422")
+    public void deveFalharAoCadastrarProdutoComValorIgualString(){
+
+        Map<String, Object> payloadInvalido = criarPayloadComValorInvalido("ABC");
+
+        given()
+                .contentType(ContentType.JSON)
+                .header("token", token)
+                .body(payloadInvalido)
+        .when()
+                .post("/v2/produtos")
+        .then()
+                .assertThat()
+                .statusCode(422)
+                .body("error", equalToIgnoringCase("O valor do produto deve estar entre R$ 0,01 e R$ 7.000,00"))
+                .body("data", empty());
     }
 
 }

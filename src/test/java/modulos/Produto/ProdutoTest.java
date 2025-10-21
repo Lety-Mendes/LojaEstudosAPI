@@ -178,7 +178,7 @@ public class ProdutoTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Deve permitir o cadastro do produto com o limite maximo de 100 caracteres, status code 201")
+    @DisplayName("Deve permitir o cadastro do nome do produto com o limite maximo de 100 caracteres, status code 201")
 
     public void limiteMaximo(){
       String limiteCaracters= "A".repeat(100);
@@ -200,7 +200,7 @@ public class ProdutoTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("BUG REPORTADO: Limite excedido retorna 201 e dados incorretos (Deveria ser 422)")
+    @DisplayName("BUG REPORTADO: Limite excedido no produtoNome retorna 201 e dados incorretos (Deveria ser 422)")
 
      public void deveFalharComNomeAcimaDoLimiteMasRetornaBug(){
         String dentroDoLimite= "A".repeat(100);
@@ -281,7 +281,7 @@ public class ProdutoTest extends BaseTest {
                 .body("data", is(empty()));
     }
 
-    @Test
+       @Test
     @DisplayName("BUG REPORTADO: Deve falhar ao cadastrar produto com produtoCores vazio, mas API retorna 201")
     public void deveFalharComProdutoCoresVazioMasRetornaBug(){
         given()
@@ -301,6 +301,65 @@ public class ProdutoTest extends BaseTest {
                 .body("message", equalToIgnoringCase("Produto adicionado com sucesso"));
     }
 
+    @Test
+    @DisplayName("Deve falhar ao cadastrar produto com produtoCores nulo/ausente, status 400")
+    public void deveFalharAoCadastrarComprodutoCoresAusente(){
+        given()
+                .contentType(ContentType.JSON)
+                .header("token", token)
+                .body(new ProdutoBuilder().semCores().build())
+        .when()
+                .post("/v2/produtos")
+        .then()
+                .assertThat()
+                .statusCode(400)
+                .body("error", equalToIgnoringCase("produtoNome, produtoValor e produtoCores são campos obrigatórios"))
+                .body("data", empty());
+
+    }
+
+
+    @Test
+    @DisplayName("BUG REPORTADO:Deve falhar ao cadastrar produto com produtoCores acima de 100 caracteres, mas API retona o ultimo produto cadastrado com produtoCores com até 100 caracteres")
+    public void deveFalharComNomeDeCorAcimaDoLimiteMasRetornaProdutoAnterior(){
+
+
+        String corTruncada = "C".repeat(100);
+        String corColisao = "C".repeat(101);
+
+        //Cadastrar o Produto de 100 caracteres
+        Integer produtoIdEsperado;
+
+        String nomeUnico = "Produto Colisao " + System.currentTimeMillis();
+
+        produtoIdEsperado = given()
+                .contentType(ContentType.JSON)
+                .header("token", this.token)
+                .body(new ProdutoBuilder().comNome(nomeUnico).comCores(List.of(corTruncada)).build())
+                .when()
+                .post("/v2/produtos")
+                .then()
+                .statusCode(201)
+                .extract().path("data.produtoId");
+
+        // Tentar cadastrar um produto com produtoCor com mais de 100 caracteres
+        given()
+                .contentType(ContentType.JSON)
+                .header("token", this.token)
+                .body(new ProdutoBuilder().comNome(nomeUnico).comCores(List.of(corColisao)).build())
+                .when()
+                .post("/v2/produtos")
+                .then()
+                .assertThat()
+                // Confirma o BUG: A API retorna 201
+                .statusCode(201)
+                // O ID retornado é o ID do produto cadastrado anteriormente com produtoCor com o limite de 100 caracters
+                .body("data.produtoId", equalTo(produtoIdEsperado))
+                .body("data.produtoCores", contains(corTruncada))
+                .body("message", equalToIgnoringCase("Produto adicionado com sucesso"));
+    }
+
+
 
     // Metodo auxiliar para criar um payload inválido
     private Map<String, Object> criarPayloadComValorInvalido(String valorInvalido) {
@@ -316,7 +375,7 @@ public class ProdutoTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Deve falhar ao tentar cadastrar produto com uma string, status code 422")
+    @DisplayName("Deve falhar ao tentar cadastrar produtoValor com uma string, status code 422")
     public void deveFalharAoCadastrarProdutoComValorIgualString(){
 
         Map<String, Object> payloadInvalido = criarPayloadComValorInvalido("ABC");

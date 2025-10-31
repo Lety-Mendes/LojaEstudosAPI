@@ -17,7 +17,7 @@ public class ProdutoBuilder {
         cores.add("Preto");
         cores.add("Branco");
         this.produto.setProdutoCores(cores);
-        this.produto.setProdutoUrlMock("");
+        this.produto.setProdutoUrlMock("http://www.teste-mock.com.br");
 
 
 
@@ -68,7 +68,20 @@ public class ProdutoBuilder {
         return this;
     }
 
+    public ProdutoBuilder comUrlMock(String urlValida) {
+        this.produto.setProdutoUrlMock(urlValida);
+        return this;
+    }
+
+    public ProdutoBuilder semUrlMock() {
+        this.produto.setProdutoUrlMock(null);
+        return this;
+    }
+
     public Produto build(){
         return this.produto;
     }
+
+
+
 }

@@ -22,9 +22,7 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
 @DisplayName("Testes de API rest do modulo de Produto")
 
-public class ProdutoTest extends BaseTest {
-
-
+public class ProdutoPostTest extends BaseTest {
 
 
     @Test
@@ -37,7 +35,7 @@ public class ProdutoTest extends BaseTest {
         //Insteri produto com valor zero
         Response response= given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comNome("play station 5").comValor (0.00).build())
 
         .when()
@@ -54,7 +52,7 @@ public class ProdutoTest extends BaseTest {
         //inserir produto com valor maio que 7001
         Response response= given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comNome("play station 5").comValor (7001d).build())
 
         .when()
@@ -71,7 +69,7 @@ public class ProdutoTest extends BaseTest {
 
         given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comNome("play station 5").comValor (7000d).build())
 
         .when()
@@ -99,7 +97,7 @@ public class ProdutoTest extends BaseTest {
 
         given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comNome("play station 5").comValor(0.01).build())
 
                 .when()
@@ -130,7 +128,7 @@ public class ProdutoTest extends BaseTest {
 
        primeiroProdutoId=given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comNome("Televisão").comValor(600d).build())
 
         .when()
@@ -150,7 +148,7 @@ public class ProdutoTest extends BaseTest {
 
         given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comNome("Televisão").comValor(600d).build())
 
         .when()
@@ -173,7 +171,7 @@ public class ProdutoTest extends BaseTest {
       String limiteCaracters= "A".repeat(100);
         given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder ().comNome(limiteCaracters).comValor(600d).build())
 
         .when()
@@ -198,7 +196,7 @@ public class ProdutoTest extends BaseTest {
 
         given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comNome(acimaDoLimite).comValor(555d).build())
 
         .when()
@@ -217,7 +215,7 @@ public class ProdutoTest extends BaseTest {
     public void deveFalharComNomeVazio(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comNome("").build())
 
         .when()
@@ -233,7 +231,7 @@ public class ProdutoTest extends BaseTest {
     public void deveRetornarErroAoCadastrarComNomeNulo(){
         Response response= given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comNome(null).build())
 
         .when()
@@ -247,7 +245,7 @@ public class ProdutoTest extends BaseTest {
     public void deveFalharAoCadastrarProdutoComValorVazio(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().semValor().build())
 
         .when()
@@ -263,7 +261,7 @@ public class ProdutoTest extends BaseTest {
     public void deveFalharComProdutoCoresVazio(){
         Response response = given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comCores(new ArrayList<>()).build())
 
         .when()
@@ -295,7 +293,7 @@ public class ProdutoTest extends BaseTest {
 
         given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comCores(List.of(corColisao)).build())
         .when()
                 .post("/v2/produtos")
@@ -319,7 +317,7 @@ public class ProdutoTest extends BaseTest {
 
         Response response= given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(payloadInvalido)
         .when()
                 .post("/v2/produtos");
@@ -343,7 +341,7 @@ public class ProdutoTest extends BaseTest {
 
         given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comComponentes(componentes).build())
         .when()
                 .post("/v2/produtos")
@@ -369,7 +367,7 @@ public class ProdutoTest extends BaseTest {
 
         Response response= given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comComponentes(componentes).build())
         .when()
                 .post("/v2/produtos");
@@ -390,7 +388,7 @@ public class ProdutoTest extends BaseTest {
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comComponentes(componentes).build())
         .when()
                 .post("/v2/produtos");
@@ -413,7 +411,7 @@ public class ProdutoTest extends BaseTest {
 
         given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comComponentes(componentes).build())
         .when()
                 .post("/v2/produtos")
@@ -444,7 +442,7 @@ public class ProdutoTest extends BaseTest {
 
         Response response= given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(Map.of(
                         "produtoNome", "String Quantidade",
                         "produtoValor", 100.00,
@@ -469,7 +467,7 @@ public class ProdutoTest extends BaseTest {
 
         Response response = given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().comComponentes(componentes).build())
         .when()
                 .post("/v2/produtos");
@@ -483,7 +481,7 @@ public class ProdutoTest extends BaseTest {
 
         given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().build())
         .when()
                 .post("/v2/produtos")
@@ -500,7 +498,7 @@ public class ProdutoTest extends BaseTest {
 
         given()
                 .contentType(ContentType.JSON)
-                .header("token", this.token)
+                .header("token", token)
                 .body(new ProdutoBuilder().semUrlMock().build())
         .when()
                 .post("/v2/produtos")

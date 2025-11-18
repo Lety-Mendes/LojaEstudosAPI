@@ -2,6 +2,7 @@ package base;
 
 import builder.LoginBuilder;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import static io.restassured.RestAssured.*;
@@ -11,15 +12,15 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
 
 public class BaseTest {
-    protected String token;
-    @BeforeEach
-    public void beforeEach(){
+    protected static String token;
+    @BeforeAll
+    protected static void setupBase(){
         //Configurações dos dados da API
         baseURI= "http://165.227.93.41";
         basePath= "/lojinha";
 
         //Obtenção do token
-        this.token = given()
+        token = given()
                 .contentType(ContentType.JSON)
                 .body(new LoginBuilder().builder())
 
@@ -56,5 +57,15 @@ public class BaseTest {
                 .statusCode(422)
                 .body("error", equalToIgnoringCase("O valor do produto deve estar entre R$ 0,01 e R$ 7.000,00"))
                 .body("data", is(empty()));
+    }
+
+    //Metodo para ser reutilizado em qualquer teste que precise de uma base limpa
+    protected void limparDadosDoUsuarioPadrao() {
+        given()
+                .header("token", token)
+        .when()
+                .delete("v2/dados")
+        .then()
+                .statusCode(204);
     }
 }

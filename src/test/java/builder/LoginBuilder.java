@@ -27,4 +27,5 @@ public class LoginBuilder {
     public Login builder(){
         return this.login;
     }
+
 }

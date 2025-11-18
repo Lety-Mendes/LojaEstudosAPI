@@ -22,7 +22,7 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 
 @DisplayName("Testes de API rest do modulo de Produto")
 
-public class ProdutoTest extends BaseTest {
+public class ProdutoPostTest extends BaseTest {
 
 
     @Test
